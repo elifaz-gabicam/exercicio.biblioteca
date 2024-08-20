@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha - Senai</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #36393f;
+            color: #dcddde;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #2f3136;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: #7289da;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .cell:hover {
+            background-color: #40444b;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #7289da;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jogo da Velha - Senai</h1>
+    <div id="board">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+    </div>
+    <div id="message"></div>
+
+    <script>
+        const socket = io();
+
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.addEventListener('click', () => {
+                const index = cell.getAttribute('data-index');
+                socket.emit('make_move', { index: index });
+            });
+        });
+
+        socket.on('update_board', data => {
+            const cell = document.querySelector(`.cell[data-index='${data.index}']`);
+            cell.textContent = data.symbol;
+            cell.style.pointerEvents = 'none';
+        });
+
+        socket.on('game_over', data => {
+            document.getElementById('message').textContent = data.winner === 'Empate' ? 'O jogo terminou em empate!' : `${data.winner} venceu!`;
+            setTimeout(() => {
+                document.querySelectorAll('.cell').forEach(cell => {
+                    cell.textContent = '';
+                    cell.style.pointerEvents = 'auto';
+                });
+                document.getElementById('message').textContent = '';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

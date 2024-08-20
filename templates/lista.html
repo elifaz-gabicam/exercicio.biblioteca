@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/vanilla-datatables@latest/dist/vanilla-dataTables.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-datatables@latest/dist/vanilla-dataTables.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <style>
+      footer {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .page-header {
+        border-bottom: 2px solid #007bff; /* Linha azul embaixo do cabeçalho */
+        padding-bottom: 10px; /* Espaçamento embaixo do cabeçalho */
+        margin-bottom: 20px; /* Espaçamento abaixo do cabeçalho */
+      }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="page-header mb-4">
+            <h1>Lista de Livros do SENAI</h1> <!-- Novo cabeçalho adicionado -->
+        </div>
+        <div class="mb-3 d-flex justify-content-between">
+            <div>
+                <a class="btn btn-primary" href="{{ url_for('novo') }}">Adicionar Novo Livro</a>
+                <a class="btn btn-secondary" href="{{ url_for('curriculo') }}">Currículo</a>
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Livro</th>
+                    <th>Autor</th>
+                    <th>Categoria</th>
+                    <th>Ano</th>
+                    <th>Editora</th>
+                    <th>Ativo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for livro in lista_de_livros %}
+                <tr>
+                    <td>{{ livro.titulo }}</td>
+                    <td>{{ livro.autor }}</td>
+                    <td>{{ livro.categoria }}</td>
+                    <td>{{ livro.ano }}</td>
+                    <td>{{ livro.editora }}</td>
+                    <td>{{ 'Sim' if livro.ativo else 'Não' }}</td>
+                    <td>
+                        <a href="{{ url_for('editar', id=livro.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{{ url_for('deletar', id=livro.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza de que deseja deletar este livro?');">Deletar</a>
+                        <a href="{{ url_for('reservar', id=livro.id) }}" class="btn btn-info btn-sm">
+                            {{ 'Desfazer Reserva' if livro.reservado else 'Reservar' }}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 SENAI. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var tabela = document.querySelector(".table");
+        var dataTable = new DataTable(tabela, {
+          searchable: true, // Habilita a pesquisa
+          sortable: true, // Habilita a ordenação
+          perPage: 5, // Define 5 linhas por página
+          columns: [
+            { select: 0, sort: "desc" }, // Ordena a primeira coluna em ordem decrescente
+          ],
+          labels: {
+            placeholder: "Pesquisar...", // Texto do placeholder da barra de pesquisa
+            perPage: "{select} resultados por página", // Texto da seleção de itens por página
+            noRows: "Nenhum resultado encontrado", // Texto quando não há resultados
+            info: "Mostrando {start} a {end} de {rows} resultados", // Texto de informações
+          },
+        });
+      });
+    </script>
+
+    <script type="module">
+      import Typebot from "https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js";
+
+      Typebot.initBubble({
+        typebot: "treinamento-a-9-hc4l8iw",
+        theme: {
+          button: { backgroundColor: "#0042DA", size: "large" },
+          chatWindow: { backgroundColor: "#fff" },
+        },
+      });
+    </script>
+</body>
+</html>

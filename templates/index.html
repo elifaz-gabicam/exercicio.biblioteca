@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Carros</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Consulta de Carros</h1>
+        <form action="/" method="post">
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" name="marca">
+
+            <label for="modelo">Modelo:</label>
+            <input type="text" id="modelo" name="modelo">
+
+            <label for="ano_min">Ano Mínimo:</label>
+            <input type="number" id="ano_min" name="ano_min" min="1900">
+
+            <label for="ano_max">Ano Máximo:</label>
+            <input type="number" id="ano_max" name="ano_max" min="1900">
+
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+</body>
+</html>
